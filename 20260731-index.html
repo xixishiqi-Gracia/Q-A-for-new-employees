@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>新员工答疑导航</title>
+    <style>
+:root {
+  --bg: #eef8f2;
+  --ink: #16211d;
+  --muted: #66756f;
+  --line: #c7d4cf;
+  --green: #14533f;
+  --green-soft: #dff3e9;
+  --blue: #174f8f;
+  --blue-soft: #e3f0ff;
+  --amber: #b86e1a;
+  --amber-soft: #fff0c9;
+  --red: #b52f2f;
+  --red-soft: #ffe4e4;
+  --surface: #ffffff;
+  --shadow: 0 14px 32px rgba(20, 83, 63, 0.11);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--bg);
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Verdana, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.phone-shell {
+  width: min(100%, 430px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: max(12px, env(safe-area-inset-top)) 14px 28px;
+  background: var(--bg);
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 0 -14px 12px;
+  padding: max(10px, env(safe-area-inset-top)) 14px 12px;
+  background: rgba(238, 248, 242, 0.96);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(199, 212, 207, 0.7);
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  margin-bottom: 12px;
+  padding: 0 16px;
+  border-radius: 12px;
+  color: #fff;
+  background: var(--green);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 1px;
+  font-weight: 900;
+}
+
+.hero h1 span {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.search-panel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 46px;
+  margin-bottom: 10px;
+  padding: 0 6px 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.search-panel label {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.search-panel input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  background: transparent;
+}
+
+.search-submit {
+  min-width: 56px;
+  min-height: 34px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--green);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.category-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow: visible;
+  padding: 2px 0 10px;
+}
+
+.category-pill,
+.quick-link,
+.capsule {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f7fbf8;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.category-pill {
+  display: inline-flex;
+  flex: 1 1 calc(33.333% - 8px);
+  justify-content: center;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  padding: 0 8px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.category-pill span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-pill strong {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.category-pill.active {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+
+.category-pill.active strong { color: #b7f2d5; }
+
+.quick-zone {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.quick-zone > strong {
+  color: var(--green);
+  font-size: 12px;
+}
+
+#quickLinks {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+#quickLinks::-webkit-scrollbar { display: none; }
+
+.quick-link {
+  padding: 0 12px;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border-color: transparent;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.result-count {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.link-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.answer-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.card-topline,
+.button-row,
+.thumb-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 11px;
+  border-radius: 999px;
+  color: var(--blue);
+  background: var(--blue-soft);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.tag.strong {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.tag.quiet {
+  color: var(--muted);
+  background: #f0f3f1;
+}
+
+.answer-card h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.preview-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: #f6faf7;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.preview-row strong {
+  color: var(--green);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: start;
+}
+
+.detail-actions details {
+  min-width: fit-content;
+}
+
+.detail-actions .image-details[open] {
+  width: 100%;
+}
+
+details {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+summary {
+  width: fit-content;
+  color: var(--green);
+  font-weight: 800;
+}
+
+.image-details summary {
+  color: var(--blue);
+}
+
+.full-answer {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f1f6f3;
+  color: #1a1a1a;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+
+
+.updated {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.empty-state {
+  margin-bottom: 12px;
+  padding: 18px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--surface);
+  text-align: center;
+}
+
+
+@media (min-width: 760px) {
+  body {
+    background: linear-gradient(90deg, #dbe8e2, #f4faf6);
+  }
+
+  .phone-shell {
+    margin-top: 22px;
+    margin-bottom: 22px;
+    min-height: calc(100vh - 44px);
+    border: 1px solid #0f1714;
+    border-radius: 28px;
+    box-shadow: 0 24px 70px rgba(22, 33, 29, 0.18);
+  }
+}
+
+@media (max-width: 380px) {
+  .category-pill {
+    flex-basis: calc(50% - 8px);
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <main class="phone-shell">
+      <header class="app-header">
+        <section class="hero">
+            <h1>新员工答疑导航</h1>
+        </section>
+        <form class="search-panel" id="searchForm" role="search">
+          <label for="searchInput">Search</label>
+          <input id="searchInput" type="search" placeholder="体检、饭卡、宿舍、考勤..." autocomplete="off" />
+          <button class="search-submit" type="submit">确认</button>
+        </form>
+        <nav id="categoryNav" class="category-nav" aria-label="问题分类"></nav>
+        <section class="quick-zone" aria-label="高频问题">
+          <strong>高频</strong>
+          <div id="quickLinks"></div>
+          <span class="result-count" id="resultCount"></span>
+        </section>
+        <div class="result-bar">
+          <span id="resultCount"></span>
+        </div>
+      </header>
+      <section id="emptyState" class="empty-state" hidden>没有找到匹配内容，可以换个关键词。</section>
+      <section id="linkGrid" class="link-grid" aria-label="问题列表"></section>
+    </main>
+
+    <script>
+const qaItems = [
+  {
+    "id": "qa-01",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 1,
+    "question": "入职需要准备哪些资料？",
+    "answer": "身份证(原件)、毕业证(照片即可)",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-02",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 2,
+    "question": "入职当天需要带什么？",
+    "answer": "生活用品、床上用品(可生活超市购买)、身份证(原件)、毕业证(照片即可)",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-03",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 3,
+    "question": "入职当天在哪里集合？",
+    "answer": "地图搜索:小漠比亚迪招聘中心,按照导航前往",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-04",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 4,
+    "question": "入职流程是什么？",
+    "answer": "\*第一步：线上报名\n1. 电话面试（线上）\n    招聘人员通过电话沟通，确认岗位需求及录用情况。\n2. 微信公众号投递简历（线上）\n    根据招聘指引，通过微信公众号提交个人简历。\n3. AI面试（线上）\n    收到AI面试短信邀请后，按照提示完成线上面试。\n4. 面试结果通知（线上）\n    通过面试后，收到入职办理通知短信，按照通知时间前往招聘中心办理入职。\n\n\*第二步：现场办理入职\n1. 体检（线下）\n    地点：小漠比亚迪招聘中心\n    时间：每天(包含周末,有值班人员) 8:00-15:00\n2. 新员工培训（线下）\n    在招聘中心参加入职培训，了解公司基本信息、规章制度及安全要求。\n3. 签订劳动合同（线下）\n    根据短信通知完成劳动合同签订。\n4. 打印员工工卡（线下）\n    在招聘中心办理员工工卡。\n\n\*第三步：办理入住及生活准备\n1. 办理入住（线下）\n    地点：6#生活服务中心\n    办理内容：宿舍入住登记、饭卡激活、热水功能激活。\n2.生活超市购买生活用品(线下)\n\n\*第四步：后续培训安排\n入职手续完成后，通过微信通知后续新员工培训及上岗安排。\n1、事业部培训\n2、工厂培训\n3、班组培训",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-05",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 5,
+    "question": "入职办理需要多长时间？",
+    "answer": "正常情况下，新员工入职流程预计 1-3天内完成。\n如遇特殊情况，办理时间可能会有所延长，例如：\n1. 简历信息填写错误或资料需要修改，需要重新确认信息；\n2. 体检结果异常，需要安排复检，等待复检结果。\n建议按照招聘通知时间及时办理相关手续，并提前准备好所需资料，以便顺利完成入职。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-06",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 6,
+    "question": "体检在哪里进行？",
+    "answer": "新员工入职体检可选择以下两种方式：\n1. 在所在地公立二级甲等及以上医院进行体检\n    认可机构：公立二甲及以上医院出具的入职体检报告。\n2. 前往小漠比亚迪招聘中心进行体检\n    体检费用：约50元。\n两种方式均可，员工可根据自身情况选择。\n\n温馨提示：\n* 公立医院体检费用预计约200-400元，具体以医院收费标准为准；\n* 如体检结果不符合入职要求，将无法办理入职，往返交通费用请提前考虑。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-07",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 7,
+    "question": "体检标准是什么?",
+    "answer": "1. 血压: 收缩压＜140mmHg；舒张压≤90mmHg。\n2. 心率: 心率＞50次/分钟，＜100次/分钟。\n3. BMI: BMI≤30。\n4. 肝功能: 谷丙转氨酶（ALT）≤95。\n5. 常规检查: 内科、眼科、口腔科、耳鼻喉科等检查结果无明显异常。\n6. 胸片检查: 胸片正位DR检查结果无明显异常。\n7. 血常规参考范围\n（1）白细胞（WBC）3.5～12×10⁹/L。\n（2）血红蛋白（Hb）≥90g/L。\n（3）血小板（PLT）80×10⁹/L＜PLT≤500×10⁹/L。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-08",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 8,
+    "question": "体检不合格怎么办？",
+    "answer": "如体检结果存在不符合入职体检要求的情况，可根据通知安排进行复检。\n复检后：\n* 如复检结果符合入职要求，可继续办理后续入职流程；\n* 如复检结果仍不符合入职要求，将无法办理入职。\n温馨提示：\n* 如体检结果不符合入职要求，将无法办理入职，往返交通费用请提前考虑。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-09",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 9,
+    "question": "入职简历填写错误怎么办？",
+    "answer": "简历填写常见注意事项：\n1. 教育经历填写\n* 非特殊情况，学习形式选择“全日制”；\n* 学校名称、专业名称需填写完整，不可以使用简称；\n    例如：“北京一中”应填写为“北京市第一中学”；\n* 系统选择栏中的学校、专业信息，需要与毕业证信息完全一致；\n* 如搜索结果与毕业证信息存在差异（包括一个字不同），请选择“其他”，再手动填写正确信息。\n2. 工作经历填写\n* 无特殊要求时，工作经历可以不填写。\n3. 技工证书填写\n* 如持有相关技能证书，请在附件处上传证书照片。\n填写简历时请确保个人信息真实、准确，避免因信息错误影响入职办理。\n如发现入职简历填写错误，请及时联系招聘人员进行确认和修改，避免影响后续入职流程。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-10",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 10,
+    "question": "身份证丢失可以办理入职吗？",
+    "answer": "可以,但是不提供身份证补办业务,需自行补办",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-11",
+    "category": "入职",
+    "group": "工卡/员工信息",
+    "number": 1,
+    "question": "工卡什么时候办理？",
+    "answer": "合同签署完成就可以办理",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-12",
+    "category": "入职",
+    "group": "工卡/员工信息",
+    "number": 2,
+    "question": "工卡在哪里领取？",
+    "answer": "员工工卡需前往小漠比亚迪招聘中心自行打印。\n打印位置：\n* 招聘中心1楼设有工卡打印设备；\n* 招聘中心2楼设有工卡打印设备。\n办理方式：\n到达招聘中心后，根据现场指引前往工卡打印设备，自行完成工卡打印。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-13",
+    "category": "入职",
+    "group": "工卡/员工信息",
+    "number": 3,
+    "question": "工卡丢失/损坏怎么办？",
+    "answer": "如员工工卡丢失或损坏，可按照以下方式处理：\n1. 前往招聘中心尝试重新打印\n    前往招聘中心工卡打印设备处，确认是否可以重新打印工卡。\n2. 申请补换厂牌\n    如无法重新打印，可通过企业微信申请补换厂牌：\n操作路径：\n企业微信 → 工作台 → 应用中心 → 员工自助 → 我想做 → 补换厂牌",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-14",
+    "category": "入职",
+    "group": "工卡/员工信息",
+    "number": 4,
+    "question": "工卡有什么用途？",
+    "answer": "员工工卡主要用于以下场景：\n1. 食堂消费:  在食堂就餐时，可使用工卡进行刷卡消费。\n2. 热水使用:  宿舍热水使用时，通过工卡进行刷卡计费。\n3. 考勤打卡:  上下班通过工卡进行考勤打卡。\n4. 园区公交乘坐:  乘坐园区公交车时，可使用工卡刷卡乘车。\n请妥善保管员工工卡，如发生丢失或损坏，请及时办理补换。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-15",
+    "category": "入职",
+    "group": "工衣/劳保用品",
+    "number": 1,
+    "question": "工衣在哪里领取？",
+    "answer": "员工分配班组后，由班组文员统一安排工衣领取。\n如忘记领取或未收到工衣，请及时联系班组长确认。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-16",
+    "category": "入职",
+    "group": "工衣/劳保用品",
+    "number": 2,
+    "question": "工衣尺寸怎么选择？",
+    "answer": "入职时会统一统计员工工衣尺寸，请根据实际需求填写。\n如后续发现尺寸不合适，可联系班组长协调处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-17",
+    "category": "入职",
+    "group": "工衣/劳保用品",
+    "number": 3,
+    "question": "工衣不合适可以更换吗？",
+    "answer": "如工衣尺寸不合适，请及时告知班组长，由班组协助处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-18",
+    "category": "入职",
+    "group": "工衣/劳保用品",
+    "number": 4,
+    "question": "工衣丢失怎么办？",
+    "answer": "如工衣丢失，请及时告知班组长，按照相关流程进行处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-19",
+    "category": "入职",
+    "group": "工衣/劳保用品",
+    "number": 5,
+    "question": "劳保用品在哪里领取？",
+    "answer": "新员工入职后，根据岗位需求由班组统一安排劳保用品领取。\n如未领取或有缺少情况，请联系班组长确认。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-20",
+    "category": "宿舍",
+    "group": "宿舍入住",
+    "number": 1,
+    "question": "宿舍在哪里？",
+    "answer": "新员工完成入职手续后，需前往6#生活服务中心办理住宿登记。\n办理完成后，系统会显示宿舍分配信息，建议及时截图保存。\n如忘记保存，可通过以下路径查看：\n企业微信 → 工作台 → 应用中心 → 宿舍管家\n根据宿舍信息及地图指引前往即可，宿舍楼配有电梯。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-21",
+    "category": "宿舍",
+    "group": "宿舍入住",
+    "number": 2,
+    "question": "宿舍怎么分配？",
+    "answer": "首次入住由系统根据空床位情况自动分配宿舍。\n如后续需要调整宿舍，请入职后告知班组长，入职满一个月后可申请调整。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-22",
+    "category": "宿舍",
+    "group": "宿舍入住",
+    "number": 3,
+    "question": "宿舍钥匙在哪里领取？",
+    "answer": "宿舍采用电子门锁，无需领取实体钥匙。\n进入宿舍时，使用员工工卡刷卡即可开门。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-23",
+    "category": "宿舍",
+    "group": "宿舍入住",
+    "number": 4,
+    "question": "宿舍入住需要办理什么手续？",
+    "answer": "打印工卡后前往6#生活服务中心办理入住，完成：\n* 宿舍入住登记；\n* 查看宿舍分配信息；\n* 办理相关入住手续。\n完成后即可根据分配信息入住。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-24",
+    "category": "宿舍",
+    "group": "宿舍入住",
+    "number": 5,
+    "question": "可以申请调宿舍吗？",
+    "answer": "可以。如需调整宿舍，请入职后告知班组长，入职满一个月后按照流程申请。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-25",
+    "category": "宿舍",
+    "group": "宿舍入住",
+    "number": 6,
+    "question": "可以申请换室友吗？",
+    "answer": "原则上不支持个人申请更换室友。\n如遇特殊情况，可向班组长反馈，由相关人员协助处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-26",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 1,
+    "question": "宿舍没有热水怎么办？",
+    "answer": "确认是否在6#生活服务中心处进行热水功能激活\n如遇宿舍设施或生活问题，可通过以下方式快速咨询和报修：\n1. 前往6栋宿舍生活服务中心现场咨询；\n2. 拨打服务中心24小时热线(咨询人数过多的情况下会拨打不通)：\n    0755-23868553\n    0755-23867587\n3. 联系所在宿舍群内值班人员；\n4. 通过企业微信提交报修：\n    企微 → 工作台 → 常用应用 → 宿舍管家 → 报修",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-27",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 2,
+    "question": "空调坏了怎么办？",
+    "answer": "如遇宿舍设施或生活问题，可通过以下方式快速咨询和报修：\n1. 前往6栋宿舍生活服务中心现场咨询；\n2. 拨打服务中心24小时热线(咨询人数过多的情况下会拨打不通)：\n    0755-23868553\n    0755-23867587\n3. 联系所在宿舍群内值班人员；\n4. 通过企业微信提交报修：\n    企微 → 工作台 → 常用应用 → 宿舍管家 → 报修",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-28",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 3,
+    "question": "水电异常怎么办？",
+    "answer": "如遇宿舍设施或生活问题，可通过以下方式快速咨询和报修：\n1. 前往6栋宿舍生活服务中心现场咨询；\n2. 拨打服务中心24小时热线(咨询人数过多的情况下会拨打不通)：\n    0755-23868553\n    0755-23867587\n3. 联系所在宿舍群内值班人员；\n4. 通过企业微信提交报修：\n    企微 → 工作台 → 常用应用 → 宿舍管家 → 报修",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-29",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 4,
+    "question": "宿舍灯坏了怎么办？",
+    "answer": "如遇宿舍设施或生活问题，可通过以下方式快速咨询和报修：\n1. 前往6栋宿舍生活服务中心现场咨询；\n2. 拨打服务中心24小时热线(咨询人数过多的情况下会拨打不通)：\n    0755-23868553\n    0755-23867587\n3. 联系所在宿舍群内值班人员；\n4. 通过企业微信提交报修：\n    企微 → 工作台 → 常用应用 → 宿舍管家 → 报修",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-30",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 5,
+    "question": "门锁坏了怎么办？",
+    "answer": "如遇宿舍设施或生活问题，可通过以下方式快速咨询和报修：\n1. 前往6栋宿舍生活服务中心现场咨询；\n2. 拨打服务中心24小时热线(咨询人数过多的情况下会拨打不通)：\n    0755-23868553\n    0755-23867587\n3. 联系所在宿舍群内值班人员；\n4. 通过企业微信提交报修：\n    企微 → 工作台 → 常用应用 → 宿舍管家 → 报修",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-31",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 6,
+    "question": "洗衣机在哪里？",
+    "answer": "洗衣机房位置可查看宿舍楼电梯附近地图指引，地图中有洗衣机房标注。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-32",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 7,
+    "question": "宿舍网络如何连接？",
+    "answer": "完成入职手续后，可连接宿舍Wi-Fi。\nWi-Fi名称：byd-family\n登录账号：员工工号\n登录密码：入职登记的手机号码\n如无法连接，请确认：\n* 是否已完成入职；\n* 工号及手机号是否填写正确。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-33",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 8,
+    "question": "宿舍床位有人怎么办?",
+    "answer": "如发现分配的宿舍床位被他人占用，请及时联系宿舍管理人员处理，不要自行协商或产生冲突。\n1. 前往6栋宿舍生活服务中心现场咨询；\n2. 拨打服务中心24小时热线：\n    0755-23868553\n    0755-23867587\n    （如咨询人数较多，可能出现暂时无法接通情况，请耐心尝试。）\n3. 联系所在宿舍群内值班人员，反馈床位占用情况，由宿舍管理人员协助处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-34",
+    "category": "宿舍",
+    "group": "宿舍管理",
+    "number": 1,
+    "question": "宿舍可以使用大功率电器吗？",
+    "answer": "不可以",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-35",
+    "category": "宿舍",
+    "group": "宿舍管理",
+    "number": 2,
+    "question": "宿舍可以养宠物吗？",
+    "answer": "不可以",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-36",
+    "category": "吃饭/生活",
+    "group": "饭卡",
+    "number": 1,
+    "question": "饭卡在哪里充值？",
+    "answer": "首次充值及热水功能激活，需前往 **6栋生活服务中心** 办理,\n后续饭卡充值可通过以下方式进行：\n1. 线下充值\n* 6#生活服务中心充值机；\n* 食堂水吧处充值机。\n2. 线上充值\n    操作路径：\n    企业微信 → 工作台 → 常用应用 → 消费系统 → 充值",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-37",
+    "category": "吃饭/生活",
+    "group": "饭卡",
+    "number": 2,
+    "question": "饭卡充值多久到账？",
+    "answer": "饭卡充值后即时到账，充值完成后即可使用。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-38",
+    "category": "吃饭/生活",
+    "group": "饭卡",
+    "number": 3,
+    "question": "饭卡余额如何查询？",
+    "answer": "查询路径：\n企业微信 → 工作台 → 常用应用 → 消费系统\n进入后可查看饭卡余额及消费记录。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-39",
+    "category": "吃饭/生活",
+    "group": "饭卡",
+    "number": 4,
+    "question": "饭卡丢失怎么办？",
+    "answer": "操作路径：\n企业微信 → 工作台 → 应用中心 → 员工自助 → 我想做 → 补换厂牌",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-40",
+    "category": "吃饭/生活",
+    "group": "食堂",
+    "number": 1,
+    "question": "食堂在哪里？",
+    "answer": "园区内设有多个食堂，可根据所在厂房选择就餐地点：\n* 1号、13号厂房员工：可前往西门附近购买外卖，也可乘坐园区公交前往1#食堂、8#食堂；\n* 25号厂房员工：建议前往8#食堂就餐；\n* 22号厂房员工：可前往9#食堂就餐。\n具体位置可查看园区地图指引。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-41",
+    "category": "吃饭/生活",
+    "group": "食堂",
+    "number": 2,
+    "question": "食堂营业时间是什么？",
+    "answer": "食堂开放时间：\n早餐：7:00-8:30\n午餐：11:30-12:30\n晚餐：17:00-19:00\n夜宵：23:30-00:30\n请根据时间安排就餐。[工作时间勿刷卡消费]",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-42",
+    "category": "吃饭/生活",
+    "group": "食堂",
+    "number": 3,
+    "question": "入职当天免费餐券如何使用？",
+    "answer": "入职当天领取的免费餐券，仅限在1号食堂工作餐窗口使用。\n请前往指定窗口就餐，其他窗口无法使用。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-43",
+    "category": "吃饭/生活",
+    "group": "食堂",
+    "number": 4,
+    "question": "食堂可以使用现金吗？",
+    "answer": "食堂不支持现金支付。\n就餐需使用员工刷卡消费。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-44",
+    "category": "吃饭/生活",
+    "group": "食堂",
+    "number": 5,
+    "question": "食堂饭菜菜单和价格如何查询？",
+    "answer": "可通过企业微信查看食堂菜单及价格。\n操作路径：\n企业微信 → 工作台 → 应用中心 → 迪之家 → 迪生活 → 我迪菜单\n进入菜单后，可在顶部切换不同餐厅查看菜品及价格。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-45",
+    "category": "吃饭/生活",
+    "group": "快递/购物",
+    "number": 1,
+    "question": "快递地址怎么填写？",
+    "answer": "广东省汕尾市海丰县小漠镇比亚迪文体中心",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-46",
+    "category": "吃饭/生活",
+    "group": "快递/购物",
+    "number": 2,
+    "question": "快递在哪里领取？",
+    "answer": "园区内不同快递领取地点如下：\n1. 普通快递、京东快递\n    领取地点：6#宿舍生活服务中心对面（生活超市隔壁）\n营业时间：9:00-23:00\n2. 顺丰快递\n    领取地点：6#宿舍西南角\n收到取件通知后，请根据快递类型前往对应地点领取。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-47",
+    "category": "吃饭/生活",
+    "group": "快递/购物",
+    "number": 3,
+    "question": "附近有哪些便利店？",
+    "answer": "园区附近便利店位置可查看地图指引。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-48",
+    "category": "吃饭/生活",
+    "group": "快递/购物",
+    "number": 4,
+    "question": "附近有哪些购物地点？",
+    "answer": "园区附近便利店位置可查看地图指引。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-49",
+    "category": "工作",
+    "group": "公交车乘坐",
+    "number": 1,
+    "question": "上班公交车如何乘坐？",
+    "answer": "员工可根据住宿楼栋选择最近的园区岗亭进入工业园。\n乘车步骤：\n1. 进入园区后，前往有“迪迪巴士”地面标识的站点候车\n2. 注意乘车方向：\n* 前往1号、13号厂房：从岗亭进入后，在马路对面候车；\n* 前往22号、25号厂房：在岗亭所在一侧候车。\n请提前确认方向，避免乘坐错误车辆。\n3. 到达厂房后，根据地图指引前往对应厂房。\n    注意：进入厂房时，请从标注的前台入口进入。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-50",
+    "category": "工作",
+    "group": "公交车乘坐",
+    "number": 2,
+    "question": "公交车班次如何查看？",
+    "answer": "查询路径：\n企业微信 → 工作台 → 常用应用 → 迪迪巴士\n操作步骤：\n1. 点击“允许”开启位置授权；\n2. 选择起点：小漠2号冲压站；\n3. 选择终点：小漠23号厂房站；\n4. 点击“搜索”；\n5. 查看公交班次及实时车辆情况。\n\n【腾讯文档】《公交车班次时刻表-0731》\nhttps://docs.qq.com/doc/DSUtLVmVLWG5TaEFD",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-51",
+    "category": "工作",
+    "group": "考勤",
+    "number": 3,
+    "question": "上班时间是什么？",
+    "answer": "工作时间：\n上午：8:00-11:30\n午间：11:30-12:30\n下午：12:30-17:00\n请根据班组安排提前到岗。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-52",
+    "category": "工作",
+    "group": "考勤",
+    "number": 4,
+    "question": "怎么打卡？",
+    "answer": "到达对应厂房后，前往厂房内部进行考勤打卡。 \n[只要有打卡机、各个厂房都可以打卡,不用回到原厂房]\n本工厂打卡识别方法： \n* 门口有“轻量化部件工厂”立牌的位置即为前台；\n* 进入前台后，从前台门进入厂房.在墙面寻找考勤打卡机；\n* 将工卡放置在感应区域完成打卡。\n打卡注意事项：\n* 打卡成功后，必须确认卡机显示“打卡成功”；\n* 如未显示成功，不视为完成打卡。\n1. 拍照留存现场信息；\n    * 拍摄完整考勤机；\n    * 确保照片中包含打卡失败提示信息。\n2. 分配班组后，将情况反馈给领班/考勤员处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-53",
+    "category": "工作",
+    "group": "考勤",
+    "number": 5,
+    "question": "打卡异常怎么办？",
+    "answer": "如出现无法打卡或打卡未显示成功：\n1. 拍照留存现场信息；\n    * 拍摄完整考勤机；\n    * 确保照片中包含打卡失败提示信息。\n2. 分配班组后，将情况反馈给领班/考勤员处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-54",
+    "category": "工作",
+    "group": "考勤",
+    "number": 6,
+    "question": "忘记打卡怎么办？",
+    "answer": "如忘记打卡，请在分配班组后联系领班/考勤员申请补卡。\n温馨提示：\n忘记打卡会影响工时核算，可能影响工资计算，请及时处理。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-55",
+    "category": "工作",
+    "group": "考勤",
+    "number": 7,
+    "question": "迟到/早退如何处理？",
+    "answer": "如发生迟到，请及时联系分配班组后的领班/考勤员进行确认和处理。\n温馨提示：\n迟到会影响工时核算，请及时补充相关记录。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-56",
+    "category": "工作",
+    "group": "考勤",
+    "number": 8,
+    "question": "怎么查询考勤记录？",
+    "answer": "查询路径：\n企业微信 → 工作台 → 常用应用 → 员工自助 → 我想查 → 我的考勤\n进入后可查看个人考勤记录。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-57",
+    "category": "工作",
+    "group": "岗位安排",
+    "number": 1,
+    "question": "我的岗位在哪里？",
+    "answer": "新员工入职后，需要先完成岗前培训：\n* 第1天：事业部培训；\n* 第2天：工厂培训。\n培训完成后，由相关部门进行岗位分配。\n岗位分配完成后，可确认自己的工作岗位及所属班组。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-58",
+    "category": "工作",
+    "group": "岗位安排",
+    "number": 2,
+    "question": "我的领班是谁？",
+    "answer": "完成岗位分配后，即可知晓对应班组及负责人。\n如不清楚自己的领班，可咨询所在部门人员确认。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-59",
+    "category": "工作",
+    "group": "岗位安排",
+    "number": 3,
+    "question": "如何联系我的班组？",
+    "answer": "可通过企业微信搜索员工工号，联系对应部门负责人。\n联系方式：\n生产科：廖工（8951449）、许工（4626649）\n计划科：郭工（8984125）\n品质科：傅工（4044133）\n工艺科：徐工（7924165）\n设备科：韩工（8874103）\n如已分配班组，优先联系自己的班组负责人。",
+    "updatedAt": "2026-07-30"
+  },
+  {
+    "id": "qa-60",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 9,
+    "question": "宿舍遥控板在哪里?",
+    "answer": "如需使用宿舍空调遥控板，可通过以下方式：\n1. 临时使用手机遥控\n可尝试下载“万能遥控器”类应用进行控制。\n注意：部分手机不具备红外功能，可能无法使用手机遥控。\n2. 领取空调遥控板\n前往6#生活服务中心登记领取遥控板。\n温馨提示：\n 请妥善保管宿舍遥控板，如遗失或损坏，请及时联系宿舍管理人员处理。",
+    "updatedAt": "2026-07-31"
+  },
+  {
+    "id": "qa-61",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 10,
+    "question": "宿舍如何远程开门?",
+    "answer": "如遇无法刷卡进入宿舍的情况，可通过以下方式申请远程开锁：\n1. 电话联系宿舍服务中心\n服务中心24小时热线：\n0755-23868553\n0755-23867587\n2. 前往宿舍楼1楼值班室\n联系所在宿舍楼值班人员，由工作人员协助处理。\n3. 企业微信申请远程开锁,操作路径：\n企业微信 → 工作台 → 应用中心 → 宿舍管家 → 远程开锁",
+    "updatedAt": "2026-07-31"
+  },
+  {
+    "id": "qa-62",
+    "category": "宿舍",
+    "group": "宿舍设施",
+    "number": 11,
+    "question": "宿舍床位尺寸是多少?",
+    "answer": "宿舍床位尺寸：\n宽：0.97米\n长：1.97米\n如需购买床上用品，建议根据以上尺寸选择合适规格。",
+    "updatedAt": "2026-07-31"
+  },
+  {
+    "id": "qa-63",
+    "category": "入职",
+    "group": "入职前准备",
+    "number": 11,
+    "question": "入职需要什么银行卡?",
+    "answer": "办理入职时，需要提供：\n\n* 本人一类银行卡；\n* 银行类型不限，可选择任意银行；\n* 银行卡必须为本人实名办理。\n\n温馨提示：\n* 不支持使用他人银行卡；\n* 如暂时没有符合要求的银行卡，可按照以下方式办理：\n1. 前往小漠比亚迪招聘中心，咨询现场银行办卡点；\n2. 如无法办理，可自行前往附近银行网点办理一类银行卡。\n\n办理完成后，请及时补充银行卡信息，以免影响后续流程。\n\n操作路径：\n企业微信 → 工作台 → 应用中心 → 员工自助 → 我想改 → 工资卡 → 填写变更信息",
+    "updatedAt": "2026-07-31"
+  }
+];
+
+const state = {
+  activeCategory: "全部",
+  query: "",
+};
+
+const searchInput = document.querySelector("#searchInput");
+const searchForm = document.querySelector("#searchForm");
+const categoryNav = document.querySelector("#categoryNav");
+const quickLinks = document.querySelector("#quickLinks");
+const linkGrid = document.querySelector("#linkGrid");
+const resultCount = document.querySelector("#resultCount");
+const emptyState = document.querySelector("#emptyState");
+
+
+
+function categories() {
+  return ["全部", ...new Set(qaItems.map((item) => item.category))];
+}
+
+function filteredItems() {
+  const query = state.query.trim().toLowerCase();
+  return qaItems.filter((item) => {
+    const matchesCategory = state.activeCategory === "全部" || item.category === state.activeCategory;
+    const haystack = [item.category, item.group, item.question, item.answer, item.updatedAt].join(" ").toLowerCase();
+    return matchesCategory && (!query || haystack.includes(query));
+  });
+}
+
+function compactAnswer(answer) {
+  const firstLine = answer.split("\n").find(Boolean) || "待补充标准回答";
+  return firstLine.length > 72 ? `${firstLine.slice(0, 72)}...` : firstLine;
+}
+
+function renderCategories() {
+  categoryNav.innerHTML = "";
+  categories().forEach((category) => {
+    const count = category === "全部" ? qaItems.length : qaItems.filter((item) => item.category === category).length;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "category-pill";
+    button.classList.toggle("active", category === state.activeCategory);
+    button.dataset.category = category;
+    button.innerHTML = `<span>${category}</span><strong>${count}</strong>`;
+    button.addEventListener("click", () => {
+      state.activeCategory = category;
+      render();
+    });
+    categoryNav.append(button);
+  });
+}
+
+function renderQuickLinks() {
+  const important = ["上班公交车如何乘坐？", "打卡异常怎么办？", "入职需要什么银行卡？","工卡丢失/损坏怎么办?"];
+  quickLinks.innerHTML = "";
+  important
+    .map((question) => qaItems.find((item) => item.question === question))
+    .filter(Boolean)
+    .forEach((item) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "quick-link";
+      button.textContent = item.question;
+      button.addEventListener("click", () => {
+        state.query = item.question;
+        searchInput.value = item.question;
+        state.activeCategory = "全部";
+        render();
+        document.querySelector(`[data-card="${item.id}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+      quickLinks.append(button);
+    });
+}
+
+
+function renderCards(items) {
+  linkGrid.innerHTML = "";
+  emptyState.hidden = items.length > 0;
+  resultCount.textContent = `${items.length} 条结果`;
+
+  items.forEach((item) => {
+    const article = document.createElement("article");
+    article.className = "answer-card";
+    article.dataset.card = item.id;
+    article.innerHTML = `
+      <div class="card-topline">
+        <span class="tag strong">${item.category}</span>
+        <span class="tag">${item.group}</span>
+        <span class="tag quiet">#${item.number}</span>
+      </div>
+
+      <h3>${item.question}</h3>
+
+      <div class="preview-row">
+        <strong>预览</strong>
+        <span>${compactAnswer(item.answer)}</span>
+      </div>
+
+      <div class="detail-actions">
+        <details>
+          <summary>查看完整答案</summary>
+          <div class="full-answer">
+            ${item.answer
+              .replace(/\n/g, "<br>")
+              .replace(
+                /(https?:\/\/[^\s<]+)/g,
+                '<a href="$1" target="_blank">$1</a>'
+              )}
+          </div>
+        </details>
+      </div>
+
+      <div class="updated">更新时间：${item.updatedAt}</div>
+    `;
+    linkGrid.append(article);
+  });
+}
+
+
+
+
+
+searchInput.addEventListener("input", (event) => {
+  if (event.target.value.trim() === "") {
+    state.query = "";
+    render();
+  }
+});
+
+searchForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  state.query = searchInput.value;
+  render();
+});
+
+
+
+function render() {
+  renderCategories();
+  renderQuickLinks();
+  renderCards(filteredItems());
+}
+
+render();
+
+    </script>
+  </body>
+</html>
